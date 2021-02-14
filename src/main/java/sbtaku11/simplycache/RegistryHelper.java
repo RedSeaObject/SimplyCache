@@ -8,12 +8,13 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
 
 public class RegistryHelper
 {
 	public static void RegisterTile (Class<? extends TileEntity> tile, String registryKey)
 	{
-		GameRegistry.registerTileEntity(tile, SimplyCache.MOD_ID + ":" + registryKey);
+		GameRegistry.registerTileEntity(tile, GameData.checkPrefix(registryKey, true));
 	}
 
 	public static Block SetRegistryKey (Block block, String registryKey)
@@ -35,7 +36,7 @@ public class RegistryHelper
 	{
 		for (int i = 0; i < modelKey.length; ++ i)
 		{
-			ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(SimplyCache.MOD_ID + ":" + modelKey[i], "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(GameData.checkPrefix(modelKey[i], true), "inventory"));
 		}
 	}
 }

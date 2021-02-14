@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(modid = SimplyCache.MOD_ID, name = SimplyCache.MOD_NAME, version = SimplyCache.VERSION)
@@ -17,7 +18,7 @@ public class SimplyCache
 {
 	public static final String MOD_ID = "simplycache";
 	public static final String MOD_NAME = "SimplyCache";
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.1";
 
 	@GameRegistry.ObjectHolder(MOD_ID)
 	public static class Blocks
