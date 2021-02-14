@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cbc",
+    "ixi",
+    "cbc"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:glass"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "blockIron"
+    }
+  },
+  "result": {
+    "item": "simplycache:cache_upgrade",
+    "data": 1
+  }
+}

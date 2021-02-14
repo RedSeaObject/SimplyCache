@@ -1,0 +1,20 @@
+# English Language File
+
+tile.cache.name=Cache
+
+item.cache_upgrade.basic.name=Cache Upgrade (Basic)
+item.cache_upgrade.advanced.name=Cache Upgrade (Advanced)
+item.cache_upgrade.elite.name=Cache Upgrade (Elite)
+item.cache_upgrade.ultimate.name=Cache Upgrade (Ultimate)
+
+msg.locked=Locked
+msg.unlocked=Unlocked
+msg.empty=Empty
+msg.check=[%s] %s : %d / %d
+msg.upgrade_success=Level : %d -> %d | Capacity : %d
+msg.upgrade_fail=Require Level : %d | Upgrade : %d
+
+gui.tooltip.cache.level=Level : %d
+gui.tooltip.cache.stored_item=Stored Item : %s
+gui.tooltip.cache.stored_count=Stored Count : %d
+gui.tooltip.cache.locked=Locked : %s

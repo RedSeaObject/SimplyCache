@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " b ",
+    "dxd",
+    "cbc"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:glass"
+    },
+    "c": {
+      "item": "minecraft:ender_chest"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "blockGold"
+    }
+  },
+  "result": {
+    "item": "simplycache:cache_upgrade",
+    "data": 2
+  }
+}
