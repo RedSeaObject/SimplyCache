@@ -14,11 +14,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -158,17 +160,32 @@ public class BlockCache extends Block implements ITileEntityProvider
 		return true;
 	}
 
-	public void breakBlock (World world, BlockPos pos, IBlockState state)
+
+	@Override
+	public void getDrops (NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
+		ItemStack drop = new ItemStack(Item.getItemFromBlock(this));
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileCache && ! tile.isInvalid())
 		{
 			TileCache tileCache = (TileCache) tile;
 			NBTTagCompound compound = tileCache.writeToNBTHandler(new NBTTagCompound());
-			if (! compound.isEmpty()) stack.setTagCompound(compound);
+			if (! compound.isEmpty()) drop.setTagCompound(compound);
 		}
-		spawnAsEntity(world, pos, stack);
-		super.breakBlock(world, pos, state);
+		drops.add(drop);
+	}
+
+	@Override
+	public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool)
+	{
+		super.harvestBlock(world, player, pos, state, te, tool);
+		world.setBlockToAir(pos);
+	}
+
+	@Override
+	public boolean removedByPlayer (IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	{
+		if (willHarvest) return true;
+		return super.removedByPlayer(state, world, pos, player, false);
 	}
 }
