@@ -70,7 +70,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 	// Storage Changes
 	private void set (ItemStack stack)
 	{
-		storedInstance = Helper.CopyWithCount(stack, 1);
+		storedInstance = ItemStackHelper.CopyWithCount(stack, 1);
 		storedStack = stack.copy();
 	}
 
@@ -85,7 +85,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 	}
 
 	// Storage
-	public ItemStack getStoredInstance () { return Helper.CopyWithCount(storedInstance, 1); }
+	public ItemStack getStoredInstance () { return ItemStackHelper.CopyWithCount(storedInstance, 1); }
 
 	public int getCount () { return storedStack.getCount(); }
 
@@ -109,7 +109,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 		{
 			int toInsert = stack.getCount();
 			if (getSpace() < toInsert) toInsert = getSpace();
-			ItemStack sup = Helper.CopyWithCount(stack, stack.getCount() - toInsert);
+			ItemStack sup = ItemStackHelper.CopyWithCount(stack, stack.getCount() - toInsert);
 			if (storedInstance.isEmpty())
 			{
 				if (! simulate)
@@ -119,7 +119,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 				}
 				result = sup;
 			}
-			else if (! Helper.EqualityItem(storedInstance, stack)) result = stack;
+			else if (! ItemStackHelper.EqualityItem(storedInstance, stack)) result = stack;
 			else
 			{
 				if (! simulate)
@@ -145,7 +145,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 		{
 			int toExtract = Math.min(amount, storedStack.getMaxStackSize());
 			if (storedStack.getCount() < toExtract) toExtract = storedStack.getCount();
-			ItemStack sup = Helper.CopyWithCount(storedStack, toExtract);
+			ItemStack sup = ItemStackHelper.CopyWithCount(storedStack, toExtract);
 			if (! simulate)
 			{
 				shrink(toExtract);
@@ -187,7 +187,7 @@ public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, I
 		if (compound.hasKey(StoredItemKey, Constants.NBT.TAG_COMPOUND) && compound.hasKey(StoredCountKey, Constants.NBT.TAG_INT) && compound.hasKey(LockedKey, Constants.NBT.TAG_BYTE))
 		{
 			storedInstance = new ItemStack(compound.getCompoundTag(StoredItemKey));
-			storedStack = Helper.CopyWithCount(storedInstance, compound.getInteger(StoredCountKey));
+			storedStack = ItemStackHelper.CopyWithCount(storedInstance, compound.getInteger(StoredCountKey));
 			lock = compound.getBoolean(LockedKey);
 		}
 	}

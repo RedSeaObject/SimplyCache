@@ -3,7 +3,7 @@ package sbtaku11.simplycache;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class Helper
+public class ItemStackHelper
 {
 	public static boolean EqualityItem (ItemStack lhs, ItemStack rhs)
 	{
