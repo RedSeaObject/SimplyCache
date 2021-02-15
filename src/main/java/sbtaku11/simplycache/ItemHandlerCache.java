@@ -4,12 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-public class ItemHandlerCache implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound>
+public class ItemHandlerCache implements IItemHandlerModifiable, INBTSerializable<NBTTagCompound>
 {
 	public static final String LevelKey = "Level";
 	public static final String StoredItemKey = "StoredItem";

@@ -1,6 +1,7 @@
 package sbtaku11.simplycache;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -10,7 +11,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(modid = SimplyCache.MOD_ID, name = SimplyCache.MOD_NAME, version = SimplyCache.VERSION)
@@ -42,7 +42,11 @@ public class SimplyCache
 			final IForgeRegistry<Item> registry = event.getRegistry();
 
 			registry.register(RegistryHelper.SetRegistryKey(new ItemBlockCache(Blocks.cache), "cache"));
-			registry.register(RegistryHelper.SetRegistryKey(new ItemCacheUpgrade("basic", "advanced", "elite", "ultimate"), "cache_upgrade"));
+			registry.register(RegistryHelper.SetRegistryKey(new ItemCacheUpgrade(
+				new ItemCacheUpgrade.Property("basic", 0),
+				new ItemCacheUpgrade.Property("advanced", 1),
+				new ItemCacheUpgrade.Property("elite", 2),
+				new ItemCacheUpgrade.Property("ultimate", 3)).setCreativeTab(CreativeTabs.MISC), "cache_upgrade"));
 		}
 
 		@SubscribeEvent
@@ -50,7 +54,7 @@ public class SimplyCache
 		{
 			final IForgeRegistry<Block> registry = event.getRegistry();
 
-			registry.register(RegistryHelper.SetRegistryKey(new BlockCache(), "cache"));
+			registry.register(RegistryHelper.SetRegistryKey(new BlockCache().setCreativeTab(CreativeTabs.DECORATIONS), "cache"));
 
 			RegistryHelper.RegisterTile(TileCache.class, "cache");
 		}

@@ -1,5 +1,7 @@
 {
   "variants": {
-    "normal": { "model": "simplycache:cache" }
+    "normal": {
+      "model": "simplycache:cache"
+    }
   }
 }

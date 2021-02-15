@@ -1,36 +1,41 @@
 package sbtaku11.simplycache;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 
-public class ItemCacheUpgrade extends Item
+import java.util.Arrays;
+
+public class ItemCacheUpgrade extends ItemVariants
 {
-	private final String[] variants;
+	private final Property[] properties;
 
-	public ItemCacheUpgrade (String... variants)
+	public ItemCacheUpgrade (Property... properties)
 	{
-		super();
-		this.setHasSubtypes(true);
-		this.setMaxDamage(0);
-
-		this.setCreativeTab(CreativeTabs.MISC);
-
-		this.variants = variants;
+		super(Arrays.stream(properties).map(x -> x.variants).toArray(String[]::new));
+		this.properties = properties;
 	}
 
-	@Override
-	public String getTranslationKey (ItemStack stack)
+	public Integer getLevel (ItemStack stack)
 	{
-		return super.getTranslationKey(stack) + "." + variants[stack.getMetadata()];
+		if (stack.getItem() == this)
+		{
+			int index = stack.getMetadata();
+			if (index < properties.length)
+			{
+				return properties[index].level;
+			}
+		}
+		return null;
 	}
 
-	@Override
-	public void getSubItems (CreativeTabs tab, NonNullList<ItemStack> items)
+	public static class Property
 	{
-		if (this.isInCreativeTab(tab))
-			for (int i = 0; i < variants.length; ++ i)
-				items.add(new ItemStack(this, 1, i));
+		public final String variants;
+		public final int level;
+
+		public Property (String variants, int level)
+		{
+			this.variants = variants;
+			this.level = level;
+		}
 	}
 }

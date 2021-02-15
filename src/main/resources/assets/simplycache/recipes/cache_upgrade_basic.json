@@ -7,10 +7,12 @@
   ],
   "key": {
     "x": {
-      "item": "minecraft:glass"
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
     },
     "c": {
-      "item": "minecraft:chest"
+      "type": "forge:ore_dict",
+      "ore": "chestWood"
     },
     "i": {
       "type": "forge:ore_dict",

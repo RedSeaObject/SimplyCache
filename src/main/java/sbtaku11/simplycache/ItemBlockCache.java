@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class ItemBlockCache extends ItemBlock
 		super(block);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation (ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn)
 	{

@@ -5,8 +5,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,11 +14,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -33,8 +31,6 @@ public class BlockCache extends Block implements ITileEntityProvider
 		this.setHardness(15.0f);
 		this.setResistance(25.0f);
 		this.setSoundType(SoundType.METAL);
-
-		this.setCreativeTab(CreativeTabs.DECORATIONS);
 	}
 
 	@Nullable
@@ -100,58 +96,59 @@ public class BlockCache extends Block implements ITileEntityProvider
 						tileCache.setLocked(! tileCache.isLocked());
 						if (tileCache.isLocked())
 						{
-							String msg = I18n.format("msg.locked");
-							player.sendStatusMessage(new TextComponentString(msg), true);
+							player.sendStatusMessage(new TextComponentTranslation("msg.locked"), true);
 							world.playSound(player, pos, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 0.2F, 0.8F);
 						}
 						else
 						{
-							String msg = I18n.format("msg.unlocked");
-							player.sendStatusMessage(new TextComponentString(msg), true);
+							player.sendStatusMessage(new TextComponentTranslation("msg.unlocked"), true);
 							world.playSound(player, pos, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 0.3F, 0.5F);
 						}
 					}
 					else
 					{
-						String locked = tileCache.isLocked() ? I18n.format("msg.locked") : I18n.format("msg.unlocked");
-						String name = ! tileCache.getStoredInstance().isEmpty() ? tileCache.getStoredInstance().getDisplayName() : I18n.format("msg.empty");
-						int count = tileCache.getCount();
-						int capacity = tileCache.getCapacity();
-						String msg = I18n.format("msg.check", locked, name, count, capacity);
-						player.sendStatusMessage(new TextComponentString(msg), true);
+						ITextComponent locked = tileCache.isLocked() ? new TextComponentTranslation("msg.locked") : new TextComponentTranslation("msg.unlocked");
+						ITextComponent name = ! tileCache.getStoredInstance().isEmpty() ? tileCache.getStoredInstance().getTextComponent() : new TextComponentTranslation("msg.empty");
+						ITextComponent count = new TextComponentString(String.valueOf(tileCache.getCount()));
+						ITextComponent capacity = new TextComponentString(String.valueOf(tileCache.getCapacity()));
+						player.sendStatusMessage(new TextComponentTranslation("msg.check", locked, name, count, capacity), true);
 						world.playSound(player, pos, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 0.2F, 0.7F);
 					}
 				}
 				else if (stack.getItem() == SimplyCache.Items.cache_upgrade)
 				{
-					int currentLevel = tileCache.getLevel();
-					int level = stack.getMetadata();
-					if (currentLevel == level)
+					Integer level = SimplyCache.Items.cache_upgrade.getLevel(stack);
+					if (level != null)
 					{
-						tileCache.setLevel(level + 1);
-						stack.shrink(1);
+						int currentLevel = tileCache.getLevel();
 
-						int preLevel = currentLevel;
-						currentLevel = tileCache.getLevel();
-						int capacity = tileCache.getCapacity();
-						String msg = I18n.format("msg.upgrade_success", preLevel, currentLevel, capacity);
-						player.sendStatusMessage(new TextComponentString(msg), true);
-						world.playSound(player, pos, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.1F, 1.0F);
-					}
-					else
-					{
-						String msg = I18n.format("msg.upgrade_fail", currentLevel, level);
-						player.sendStatusMessage(new TextComponentString(msg), true);
+						if (currentLevel == level)
+						{
+							tileCache.setLevel(level + 1);
+							stack.shrink(1);
+
+							ITextComponent fromLevel = new TextComponentString(String.valueOf(currentLevel));
+							ITextComponent toLevel = new TextComponentString(String.valueOf(tileCache.getLevel()));
+							ITextComponent capacity = new TextComponentString(String.valueOf(tileCache.getCapacity()));
+							player.sendStatusMessage(new TextComponentTranslation("msg.upgrade_success", fromLevel, toLevel, capacity), true);
+							world.playSound(player, pos, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.1F, 1.0F);
+						}
+						else
+						{
+							ITextComponent requireLevel = new TextComponentString(String.valueOf(currentLevel));
+							ITextComponent useLevel = new TextComponentString(String.valueOf(level));
+							player.sendStatusMessage(new TextComponentTranslation("msg.upgrade_fail", requireLevel, useLevel), true);
+						}
 					}
 				}
 				else
 				{
 					boolean playSound = false;
 					ItemStack heldItem = player.getHeldItem(hand);
-					ItemStack ret = tileCache.insertItem(heldItem, false);
-					if (ret != heldItem)
+					ItemStack surp = tileCache.insertItem(heldItem, false);
+					if (surp != heldItem)
 					{
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, ret);
+						player.inventory.setInventorySlotContents(player.inventory.currentItem, surp);
 						playSound = true;
 					}
 					if (playSound) world.playSound(player, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.1F, 0.7F);
@@ -161,22 +158,7 @@ public class BlockCache extends Block implements ITileEntityProvider
 		return true;
 	}
 
-	@Override
-	public void harvestBlock (World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool)
-	{
-		super.harvestBlock(world, player, pos, state, te, tool);
-		world.setBlockToAir(pos);
-	}
-
-	@Override
-	public boolean removedByPlayer (IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-	{
-		if (willHarvest) return true;
-		return super.removedByPlayer(state, world, pos, player, false);
-	}
-
-	@Override
-	public void getDrops (NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	public void breakBlock (World world, BlockPos pos, IBlockState state)
 	{
 		ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 		TileEntity tile = world.getTileEntity(pos);
@@ -186,12 +168,7 @@ public class BlockCache extends Block implements ITileEntityProvider
 			NBTTagCompound compound = tileCache.writeToNBTHandler(new NBTTagCompound());
 			if (! compound.isEmpty()) stack.setTagCompound(compound);
 		}
-		drops.add(stack);
-	}
-
-	@Override
-	public void breakBlock (World world, BlockPos pos, IBlockState state)
-	{
-		world.removeTileEntity(pos);
+		spawnAsEntity(world, pos, stack);
+		super.breakBlock(world, pos, state);
 	}
 }
